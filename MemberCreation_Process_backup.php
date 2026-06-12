@@ -1,21 +1,90 @@
-<?php session_start(); 
-error_reporting(E_ALL);       // सभी errors catch करो
-ini_set('display_errors', 1); // screen पर दिखाओ
-ini_set('log_errors', 1);     // file में भी save करो
-ini_set('error_log', __DIR__ . '/php_error.log'); // custom log file
+<?php 
+session_start(); 
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/demo_debug.log');
+ini_set('max_execution_time', 300); // 5 minutes
+
+// Debug logging function - displays on screen and logs to file
+function debug_log($message, $data = null) {
+    $timestamp = date('Y-m-d H:i:s.u');
+    $memory = round(memory_get_usage() / 1024 / 1024, 2) . 'MB';
+    $log_message = "[$timestamp] [Memory: $memory] $message";
+    if ($data !== null) {
+        $log_message .= " | Data: " . print_r($data, true);
+    }
+    
+    // Log to file
+    error_log($log_message . "\n", 3, __DIR__ . '/demo_debug.log');
+    
+    // Display on screen with styling
+    $color = '#333';
+    if (strpos($message, '✓') !== false) {
+        $color = '#28a745'; // Green for success
+    } elseif (strpos($message, '✗') !== false) {
+        $color = '#dc3545'; // Red for errors
+    } elseif (strpos($message, '⚠') !== false) {
+        $color = '#ffc107'; // Yellow for warnings
+    } elseif (strpos($message, '===') !== false) {
+        $color = '#007bff'; // Blue for section headers
+    }
+    
+    echo "<div style='font-family: monospace; font-size: 12px; padding: 3px 10px; margin: 2px 0; background: #f8f9fa; border-left: 3px solid $color; color: $color;'>";
+    echo htmlspecialchars($log_message);
+    echo "</div>\n";
+    
+    // Force output to browser immediately
+    if (ob_get_level() > 0) {
+        ob_flush();
+    }
+    flush();
+}
+
+// Start output buffering but allow flushing
+ob_implicit_flush(true);
+
+// Display debugging header
+echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Processing...</title></head><body>";
+echo "<div style='max-width: 1200px; margin: 20px auto; padding: 20px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>";
+echo "<h2 style='color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 10px;'>🔍 Script Execution Monitor</h2>";
+echo "<div style='padding: 15px; margin: 10px 0; background: #fff3cd; border: 2px solid #ffc107; border-radius: 5px;'>";
+echo "<strong>⚠️ DEBUG MODE:</strong> Email sending is DISABLED. All emails will be skipped to speed up execution.";
+echo "</div>";
+
+debug_log("=== SCRIPT STARTED ===");
+debug_log("⚠️ DEBUG MODE: Email API calls are DISABLED");
+debug_log("PHP Version: " . phpversion());
+debug_log("Memory Limit: " . ini_get('memory_limit'));
+debug_log("Max Execution Time: " . ini_get('max_execution_time') . "s");
 ?>
 <html>
 
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.2/sweetalert2.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 </head>
 
 <body>
     <?php
-    include ('config.php');
-    include ('number_to_wordConvert.php');
+    debug_log("Loading config files...");
+    try {
+        include ('./config.php');
+        debug_log("✓ config.php loaded successfully");
+    } catch (Exception $e) {
+        debug_log("✗ ERROR loading config.php: " . $e->getMessage());
+        die("Config load failed");
+    }
+    
+    try {
+        include ('./number_to_wordConvert.php');
+        debug_log("✓ number_to_wordConvert.php loaded successfully");
+    } catch (Exception $e) {
+        debug_log("✗ ERROR loading number_to_wordConvert.php: " . $e->getMessage());
+    }
 
 
 
@@ -25,8 +94,10 @@ ini_set('error_log', __DIR__ . '/php_error.log'); // custom log file
 
 
 
-    //static Post Data                      
+    //static Post Data
+    debug_log("Collecting POST data...");
     $Static_LeadID = $_POST['Static_LeadID'];
+    debug_log("Static_LeadID: " . $Static_LeadID);
     $Static_LeadSource = $_POST['Static_LeadSource'];
     $Static_FirstName = $_POST['Static_FirstName'];
     $Static_LastName = $_POST['Static_LastName'];
@@ -153,10 +224,18 @@ ini_set('error_log', __DIR__ . '/php_error.log'); // custom log file
 
 
     $attachment = "https://sarsspl.com/Lead_Management/Loyaltician/clubfourpoints/Leadpdf/memberpdf/$Primary_nameOnTheCard.pdf";
+    debug_log("Attachment path set: " . $attachment);
 
-
-    include ('Leadpdf/generatepdf/TCPDF-master/examples/tcpdf_include.php');
-    include ('Leadpdf/generatepdf/TCPDF-master/tcpdf.php');
+    debug_log("Loading TCPDF library...");
+    try {
+        include ('Leadpdf/generatepdf/TCPDF-master/examples/tcpdf_include.php');
+        debug_log("✓ tcpdf_include.php loaded");
+        include ('Leadpdf/generatepdf/TCPDF-master/tcpdf.php');
+        debug_log("✓ tcpdf.php loaded");
+    } catch (Exception $e) {
+        debug_log("✗ ERROR loading TCPDF: " . $e->getMessage());
+        die("TCPDF load failed");
+    }
 
     class MYPDF extends TCPDF
     {
@@ -172,7 +251,14 @@ ini_set('error_log', __DIR__ . '/php_error.log'); // custom log file
 
 
     // create new PDF document
-    $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    debug_log("Creating PDF document...");
+    try {
+        $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        debug_log("✓ PDF object created successfully");
+    } catch (Exception $e) {
+        debug_log("✗ ERROR creating PDF: " . $e->getMessage());
+        die("PDF creation failed");
+    }
 
     // set document information
     $pdf->SetCreator(PDF_CREATOR);
@@ -212,10 +298,12 @@ ini_set('error_log', __DIR__ . '/php_error.log'); // custom log file
 
 
 
+    debug_log("Configuring PDF settings...");
     $pdf->SetFont('times', '', 12);
     $pdf->AddPage();
     $pdf->SetMargins(5, 0, 10, true);
     $pdf->SetFillColor(255, 255, 127);
+    debug_log("✓ PDF configured");
 
 
 
@@ -271,18 +359,36 @@ ini_set('error_log', __DIR__ . '/php_error.log'); // custom log file
     //booklet Assign
     
 
+    debug_log("Querying Members table for LeadID: " . $Static_LeadID);
     $sql3 = "SELECT MembershipDetails_Level FROM `Members` where  Static_LeadID='" . $Static_LeadID . "' ";
     $runsql3 = mysqli_query($conn, $sql3);
+    if (!$runsql3) {
+        debug_log("✗ ERROR in Members query: " . mysqli_error($conn));
+        die("Database query failed");
+    }
     $sql3fetch = mysqli_fetch_array($runsql3);
+    debug_log("✓ Members data fetched, Level: " . ($sql3fetch['MembershipDetails_Level'] ?? 'NULL'));
 
 
+    debug_log("Querying Level table...");
     $sql4 = "SELECT * FROM `Level` where Leval_id='" . $sql3fetch['MembershipDetails_Level'] . "' ";
     $runsql4 = mysqli_query($conn, $sql4);
+    if (!$runsql4) {
+        debug_log("✗ ERROR in Level query: " . mysqli_error($conn));
+        die("Level query failed");
+    }
     $sql4fetch = mysqli_fetch_array($runsql4);
+    debug_log("✓ Level data fetched");
 
-     $sql5 = "SELECT FromSerialNo,ToSerialNo,AssignBooklet,Level_id FROM `voucher_Booklet` where Program_ID='" . $sql4fetch['Program_ID'] . "' and Level_id='" . $sql4fetch['Leval_id'] . "'   ";
+     debug_log("Querying voucher_Booklet table...");
+    $sql5 = "SELECT FromSerialNo,ToSerialNo,AssignBooklet,Level_id FROM `voucher_Booklet` where Program_ID='" . $sql4fetch['Program_ID'] . "' and Level_id='" . $sql4fetch['Leval_id'] . "'   ";
     $runsql5 = mysqli_query($conn, $sql5);
+    if (!$runsql5) {
+        debug_log("✗ ERROR in voucher_Booklet query: " . mysqli_error($conn));
+        die("Voucher query failed");
+    }
     $sql5fetch = mysqli_fetch_array($runsql5);
+    debug_log("✓ Voucher booklet data fetched");
 
 
 
@@ -291,7 +397,7 @@ $AssignBooklet = $sql5fetch['AssignBooklet'];
 $new_booklet_to_assigned = $sql5fetch['AssignBooklet']+1;
 
 
-
+$isfirst = null;
     if ($AssignBooklet == 0) {
         $AssignBooklet = $sql5fetch['FromSerialNo'];
         $isfirst = 1;
@@ -352,17 +458,36 @@ $AssignBooklet = $new_booklet_to_assigned;
 
             //  if($countsql6>0){
     
+            debug_log("Starting database transaction...");
             mysqli_query($conn, "START TRANSACTION");
+            debug_log("✓ Transaction started");
 
-
+            debug_log("Updating Members table...");
              $qryinsert = mysqli_query($conn, "Update Members set member_since='" . $todaysdate . "' ,Primary_Title='" . $Primary_Title . "',Primary_Pincode='" . $Primary_Pincode . "',Primary_mcode2='" . $Primary_mcode2 . "',Primary_mob2='" . $Primary_mob2 . "',Primary_Contact1code='" . $Primary_Contact1code . "',Primary_Contact1='" . $Primary_Contact1 . "',Primary_Contact2code='" . $Primary_Contact2code . "',Primary_Contact2='" . $Primary_Contact2 . "',Primary_Contact3code='" . $Primary_Contact3code . "',Primary_Contact3='" . $Primary_Contact3 . "',Primary_nameOnTheCard='" . $Primary_nameOnTheCard . "',Primary_PhotoUpload='" . $Primary_PhotoUpload . "',Primary_Email_ID2='" . $Primary_Email_ID2 . "',Primary_DateOfBirth='" . $DOB . "',Primary_Anniversary='" . $Primary_Anniversary . "',Primary_AddressType1='" . $Primary_AddressType1 . "',Primary_BuldNo_addrss='" . $Primary_BuldNo_addrss . "',Primary_Area_addrss='" . $Primary_Area_addrss . "',Primary_Landmark_addrss='" . $Primary_Landmark_addrss . "',Primary_MaritalStatus='" . $Primary_MaritalStatus . "',Spouse_Title='" . $Spouse_Title . "',Spouse_FirstName='" . $Spouse_FirstName . "',Spouse_LastName='" . $Spouse_LastName . "',Spouse_GmailMArrid1='" . $Spouse_GmailMArrid1 . "',Spouse_GmailMArrid2='" . $Spouse_GmailMArrid2 . "',Spouse_PhotoUpload='" . $Spouse_PhotoUpload . "',Spouse_mcode1Married1='" . $Spouse_mcode1Married1 . "',Spouse_mob1MArid1='" . $Spouse_mob1MArid1 . "',Spouse_mcode1Married2='" . $Spouse_mcode1Married2 . "',Spouse_mob1MArid2='" . $Spouse_mob1MArid2 . "',Spouse_Contact1codeMArid='" . $Spouse_Contact1codeMArid . "',Spouse_Contact1Married='" . $Spouse_Contact1Married . "',Spouse_Contact2codeMArid='" . $Spouse_Contact2codeMArid . "',Spouse_DateOfBirth='" . $Spouse_DOB . "',Spouse_nameOnTheCardMarried='" . $Spouse_nameOnTheCardMarried . "',Documentation_UploadSignatures='" . $Documentation_UploadSignatures . "',Documentation_AddressProof='" . $Documentation_AddressProof . "',Relationships_ReferredByLEADID='" . $Relationships_ReferredByLEADID . "',Relationships_ReferredByMEMBERSHIPID='" . $Relationships_ReferredByMEMBERSHIPID . "',itemCheck1='" . $itemCheck1 . "',BookletCheck1='" . $BookletCheck1 . "',CertificatesCheck1='" . $CertificatesCheck1 . "',PromotionalCheck1='" . $PromotionalCheck1 . "',Issue_ReferredByLEADID='" . $Issue_ReferredByLEADID . "',Issue_ReferredByMEMBERSHIPID='" . $Issue_ReferredByMEMBERSHIPID . "',booklet_Series='" . $AssignBooklet . "',GST_NUMBER='" . $MemshipDts_GST_number . "' where Static_LeadID='" . $Static_LeadID . "' ");
 
+            if (!$qryinsert) {
+                debug_log("✗ ERROR updating Members: " . mysqli_error($conn));
+            } else {
+                debug_log("✓ Members table updated successfully");
+            }
 
             if ($qryinsert) {
 
+                debug_log("Updating Leads_table...");
                 $UpdateQry = mysqli_query($conn, "update Leads_table set Status='5',MobileCode2='" . $Primary_mcode2 . "', MobileNumber2	='" . $Primary_mob2 . "',contact1Code='" . $Primary_Contact1code . "' ,ContactNo1='" . $Primary_Contact1 . "',contact2Code='" . $Primary_Contact2code . "',ContactNo2='" . $Primary_Contact2 . "',contact3Code='" . $Primary_Contact3code . "',ContactNo3='" . $Primary_Contact3 . "'  where Lead_id='" . $Static_LeadID . "' ");
+                if (!$UpdateQry) {
+                    debug_log("✗ ERROR updating Leads_table: " . mysqli_error($conn));
+                } else {
+                    debug_log("✓ Leads_table updated");
+                }
 
+                debug_log("Updating voucher_Booklet...");
                 $UpdateVoucherType = mysqli_query($conn, "update voucher_Booklet set AssignBooklet='" . $AssignBooklet . "' where Level_id='" . $sql5fetch['Level_id'] . "' ");
+                if (!$UpdateVoucherType) {
+                    debug_log("✗ ERROR updating voucher_Booklet: " . mysqli_error($conn));
+                } else {
+                    debug_log("✓ voucher_Booklet updated");
+                }
 
                 $q = "SELECT count(level_id) as V_no from voucher_Type_new where level_id='" . $sql5fetch['Level_id'] . "' and serviceName not like '%RENEWAL%'";
                 $sql = mysqli_query($conn, $q);
@@ -375,6 +500,7 @@ $AssignBooklet = $new_booklet_to_assigned;
                     $counter = 2;
                 }
 
+                debug_log("Inserting BarcodeScan records, count: " . $_row['V_no']);
                 for ($i = $counter; $i <= $_row['V_no']; $i++) {
 
                     $countR = $i;
@@ -382,8 +508,12 @@ $AssignBooklet = $new_booklet_to_assigned;
                     $NoOfVoucher = $AssignBooklet . $readyToUse;
                     $NoOfVoucher . "<br>";
 
-                    mysqli_query($conn, "insert into BarcodeScan(Voucher_id,Available) values('" . $NoOfVoucher . "','0')");
+                    $barcode_result = mysqli_query($conn, "insert into BarcodeScan(Voucher_id,Available) values('" . $NoOfVoucher . "','0')");
+                    if (!$barcode_result) {
+                        debug_log("✗ ERROR inserting BarcodeScan #$i: " . mysqli_error($conn));
+                    }
                 }
+                debug_log("✓ BarcodeScan records inserted");
 
 
 
@@ -503,9 +633,15 @@ $AssignBooklet = $new_booklet_to_assigned;
 
 
 
+                    // Initialize undefined variables
+                    $htmtab1_body = '';
+                    $tbl_footer = '';
+                    
+                    debug_log("Processing membership level: " . $sql4fetch['Leval_id']);
+                    
                     if ($sql4fetch['Leval_id'] == '1') {
 
-
+                        debug_log("Creating Gold membership email and PDF...");
                         $EmailSubject2 = "Welcome to Club Four Points !";
 
 
@@ -584,12 +720,12 @@ lang=EN-IN>Your Membership Card number is ' . $member_id . '. </span></p>
 lang=EN-IN>The membership is valid till ' . date('M Y', strtotime($validity)) . ' </span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
-lang=EN-IN> </span></p>
+lang=EN-IN></span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
 lang=EN-IN>The annual membership charge of Rs. 11000 + 18% Goods &amp; Services
 Tax amounting to Rs. 12980 /- (Rupees Twelve Thousand Nine Hundred and Eighty only)
-has been received by ' . $payment_mode . '.  A receipt is enclosed in
+has been received by ' . $payment_mode . '. A receipt is enclosed in
 this email. </span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
@@ -608,7 +744,7 @@ of this e-mail. Your membership gift certificates along with the membership are
 given at the bottom of this email.</span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
-lang=EN-IN> </span></p>
+lang=EN-IN></span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
 lang=EN-IN>Do take a moment to view all benefits and terms at </span><span
@@ -619,13 +755,13 @@ lang=EN-IN> </span></p>
 lang=EN-IN>&nbsp;</span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
-lang=EN-IN style="font-size:12.0pt;line-height:107%"> </span></p>
+lang=EN-IN style="font-size:12.0pt;line-height:107%"></span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
 lang=EN-IN style="font-size:12.0pt;line-height:107%">Yours sincerely,</span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
-lang=EN-IN style="font-size:12.0pt;line-height:107%"> </span></p>
+lang=EN-IN style="font-size:12.0pt;line-height:107%"></span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
 lang=EN-IN style="font-size:12.0pt;line-height:107%">Team Club Four Points</span></p>
@@ -1036,12 +1172,36 @@ your cooperation and understanding.</span></i></p>
                             'http' => array(
                                 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
                                 'method' => 'POST',
-                                'content' => http_build_query($data)
+                                'content' => http_build_query($data),
+                                'timeout' => 120 // 2 minute timeout for email with PDF
                             )
                         );
 
+                        debug_log("⚠ SKIPPING email to customer (Level 1 - Gold) - Email disabled for debugging");
+                        debug_log("Would send to: " . $Primary_Gmail_1);
+                        
+                        // EMAIL DISABLED FOR DEBUGGING
+                        /*
+                        debug_log("Sending email to customer (Level 1 - Gold)...");
+                        debug_log("Email API endpoint: " . $nodes);
+                        debug_log("Recipient: " . $Primary_Gmail_1);
+                        echo "<div style='margin: 10px 0; padding: 10px; background: #fff3cd; border-left: 3px solid #ffc107;'>";
+                        echo "⏳ <strong>Sending email...</strong> This may take up to 2 minutes. Please wait...";
+                        echo "</div>\n";
+                        flush();
+                        
+                        $start_time = microtime(true);
                         $context = stream_context_create($options);
-                        $result = file_get_contents($nodes, false, $context);
+                        $result = @file_get_contents($nodes, false, $context);
+                        $elapsed = round(microtime(true) - $start_time, 2);
+                        
+                        if ($result === false) {
+                            $error = error_get_last();
+                            debug_log("✗ ERROR sending customer email (Gold) after {$elapsed}s: " . ($error['message'] ?? 'Unknown error'));
+                        } else {
+                            debug_log("✓ Customer email sent (Gold) in {$elapsed}s");
+                        }
+                        */
 
 
 
@@ -1092,7 +1252,8 @@ your cooperation and understanding.</span></i></p>
     
 
 
-                    } else if ($sql4fetch['Leval_id'] == '2') {
+                    } 
+                    else if ($sql4fetch['Leval_id'] == '2') {
 
                         $EmailSubject2 = "Welcome to Club Four Points !";
 
@@ -1171,7 +1332,7 @@ lang=EN-IN>Your Membership Card number is ' . $member_id . '. </span></p>
 lang=EN-IN>The membership is valid till ' . date('M Y', strtotime($validity)) . ' </span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
-lang=EN-IN> </span></p>
+lang=EN-IN></span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
 lang=EN-IN>
@@ -1194,7 +1355,7 @@ of this e-mail. Your membership gift certificates along with the membership are
 given at the bottom of this email.</span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
-lang=EN-IN> </span></p>
+lang=EN-IN></span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
 lang=EN-IN>Do take a moment to view all benefits and terms at </span><span
@@ -1205,13 +1366,13 @@ lang=EN-IN> </span></p>
 lang=EN-IN>&nbsp;</span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
-lang=EN-IN style="font-size:12.0pt;line-height:107%"> </span></p>
+lang=EN-IN style="font-size:12.0pt;line-height:107%"></span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
 lang=EN-IN style="font-size:12.0pt;line-height:107%">Yours sincerely,</span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
-lang=EN-IN style="font-size:12.0pt;line-height:107%"> </span></p>
+lang=EN-IN style="font-size:12.0pt;line-height:107%"></span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
 lang=EN-IN style="font-size:12.0pt;line-height:107%">Team Club Four Points</span></p>
@@ -1621,10 +1782,36 @@ your cooperation and understanding.</span></i></p>
                             )
                         );
 
+                        $options['http']['timeout'] = 120; // 2 minute timeout
+                        
+                        debug_log("⚠ SKIPPING email to customer (Level 2 - Platinum) - Email disabled for debugging");
+                        debug_log("Would send to: " . $Primary_Gmail_1);
+                        
+                        // EMAIL DISABLED FOR DEBUGGING
+                        /*
+                        debug_log("Sending email to customer (Level 2 - Platinum)...");
+                        debug_log("Recipient: " . $Primary_Gmail_1);
+                        echo "<div style='margin: 10px 0; padding: 10px; background: #fff3cd; border-left: 3px solid #ffc107;'>";
+                        echo "⏳ <strong>Sending email...</strong> This may take up to 2 minutes. Please wait...";
+                        echo "</div>\n";
+                        flush();
+                        
+                        $start_time = microtime(true);
                         $context = stream_context_create($options);
-                        $result = file_get_contents($nodes, false, $context);
+                        $result = @file_get_contents($nodes, false, $context);
+                        $elapsed = round(microtime(true) - $start_time, 2);
+                        
+                        if ($result === false) {
+                            $error = error_get_last();
+                            debug_log("✗ ERROR sending customer email (Platinum) after {$elapsed}s: " . ($error['message'] ?? 'Unknown error'));
+                        } else {
+                            debug_log("✓ Customer email sent (Platinum) in {$elapsed}s");
+                        }
+                        */
 
-                    } else if ($sql4fetch['Leval_id'] == '6') {
+                    } 
+                    else if ($sql4fetch['Leval_id'] == '6') {
+                        debug_log("Processing Level 6 - Silver membership...");
 
 
                         $EmailSubject2 = "Welcome to Club Four Points !";
@@ -1705,12 +1892,12 @@ lang=EN-IN>Your Membership Card number is ' . $member_id . '. </span></p>
 lang=EN-IN>The membership is valid till ' . date('M Y', strtotime($validity)) . ' </span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
-lang=EN-IN> </span></p>
+lang=EN-IN></span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
 lang=EN-IN>The annual membership charge of Rs. 9000 + 18% Goods &amp; Services
 Tax amounting to Rs. 10620 /- (Rupees Ten Thousand Six Hundred and Twenty only)
-has been received by ' . $payment_mode . '.  A receipt is enclosed in
+has been received by ' . $payment_mode . '. A receipt is enclosed in
 this email. </span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
@@ -1729,7 +1916,7 @@ of this e-mail. Your membership gift certificates along with the membership are
 given at the bottom of this email.</span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
-lang=EN-IN> </span></p>
+lang=EN-IN></span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
 lang=EN-IN>Do take a moment to view all benefits and terms at </span><span
@@ -1740,13 +1927,13 @@ lang=EN-IN> </span></p>
 lang=EN-IN>&nbsp;</span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
-lang=EN-IN style="font-size:12.0pt;line-height:107%"> </span></p>
+lang=EN-IN style="font-size:12.0pt;line-height:107%"></span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
 lang=EN-IN style="font-size:12.0pt;line-height:107%">Yours sincerely,</span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
-lang=EN-IN style="font-size:12.0pt;line-height:107%"> </span></p>
+lang=EN-IN style="font-size:12.0pt;line-height:107%"></span></p>
 
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:0in;margin-top:0in"><span
 lang=EN-IN style="font-size:12.0pt;line-height:107%">Team Club Four Points</span></p>
@@ -2146,8 +2333,32 @@ your cooperation and understanding.</span></i></p>
                             )
                         );
 
+                        $options['http']['timeout'] = 120; // 2 minute timeout
+                        
+                        debug_log("⚠ SKIPPING email to customer (Level 6 - Silver) - Email disabled for debugging");
+                        debug_log("Would send to: " . $Primary_Gmail_1);
+                        
+                        // EMAIL DISABLED FOR DEBUGGING
+                        /*
+                        debug_log("Sending email to customer (Level 6 - Silver)...");
+                        debug_log("Recipient: " . $Primary_Gmail_1);
+                        echo "<div style='margin: 10px 0; padding: 10px; background: #fff3cd; border-left: 3px solid #ffc107;'>";
+                        echo "⏳ <strong>Sending email...</strong> This may take up to 2 minutes. Please wait...";
+                        echo "</div>\n";
+                        flush();
+                        
+                        $start_time = microtime(true);
                         $context = stream_context_create($options);
-                        $result = file_get_contents($nodes, false, $context);
+                        $result = @file_get_contents($nodes, false, $context);
+                        $elapsed = round(microtime(true) - $start_time, 2);
+                        
+                        if ($result === false) {
+                            $error = error_get_last();
+                            debug_log("✗ ERROR sending customer email (Silver) after {$elapsed}s: " . ($error['message'] ?? 'Unknown error'));
+                        } else {
+                            debug_log("✓ Customer email sent (Silver) in {$elapsed}s");
+                        }
+                        */
 
 
 
@@ -2156,7 +2367,10 @@ your cooperation and understanding.</span></i></p>
                     }
 
 
+
+
                     //===========for mail===============
+                    debug_log("Preparing enrollment statistics...");
     
 
 
@@ -2228,9 +2442,9 @@ your cooperation and understanding.</span></i></p>
 
 
 
+                    debug_log("Preparing internal notification message...");
+                    
                     $sqlcount = mysqli_query($conn, "SELECT COUNT(level_id) as count FROM `voucher_Type_new` where level_id='" . $did . "' and serviceName not like '%RENEWAL%'");
-
-
 
                     $fetchCount = mysqli_fetch_array($sqlcount);
                     $EmailSubject1 = "Thank you, New Membership Created Successfully!";
@@ -2238,6 +2452,9 @@ your cooperation and understanding.</span></i></p>
                     $MESSAGE_BODY1 = "";
                     $serialNm = $AssignBooklet;
                     $GenNm = $fetchgen['GenerateMember_Id'];
+                    
+                    debug_log("Building message1 table...");
+                    $message1 = ''; // Initialize message1
                     $message1 .= '<table border="1">';
                     $message1 .= '<tr>';
                     $message1 .= '<th>Member Name on card</th>';
@@ -2349,8 +2566,30 @@ your cooperation and understanding.</span></i></p>
                         )
                     );
 
+                    $options['http']['timeout'] = 120; // 2 minute timeout
+                    
+                    debug_log("⚠ SKIPPING internal notification email - Email disabled for debugging");
+                    
+                    // EMAIL DISABLED FOR DEBUGGING
+                    /*
+                    debug_log("Sending internal notification email...");
+                    echo "<div style='margin: 10px 0; padding: 10px; background: #fff3cd; border-left: 3px solid #ffc107;'>";
+                    echo "⏳ <strong>Sending internal notification...</strong> Please wait...";
+                    echo "</div>\n";
+                    flush();
+                    
+                    $start_time = microtime(true);
                     $context = stream_context_create($options);
-                    $result = file_get_contents($nodes, false, $context);
+                    $result = @file_get_contents($nodes, false, $context);
+                    $elapsed = round(microtime(true) - $start_time, 2);
+                    
+                    if ($result === false) {
+                        $error = error_get_last();
+                        debug_log("✗ ERROR sending internal notification after {$elapsed}s: " . ($error['message'] ?? 'Unknown error'));
+                    } else {
+                        debug_log("✓ Internal notification sent in {$elapsed}s");
+                    }
+                    */
 
 
 
@@ -2358,6 +2597,7 @@ your cooperation and understanding.</span></i></p>
 
 
                     //========================this is for log details========================
+                    debug_log("Sending log details email...");
     
                     $EmailSubject9 = "New Membership Created Successfully by " . $_SESSION['user'] . "!";
 
@@ -2392,21 +2632,69 @@ your cooperation and understanding.</span></i></p>
                         'http' => array(
                             'header' => "Content-type: application/x-www-form-urlencoded\r\n",
                             'method' => 'POST',
-                            'content' => http_build_query($data)
+                            'content' => http_build_query($data),
+                            'timeout' => 30 // 30 second timeout
                         )
                     );
 
-                    $context = stream_context_create($options);
-                    $result = file_get_contents($nodes, false, $context);
+                    debug_log("⚠ SKIPPING log details email - Email disabled for debugging");
+                    debug_log("Would send to: contactus@clubfourpoints.com");
+                    
+                    // EMAIL DISABLED FOR DEBUGGING
+                    /*
+                    debug_log("Attempting to send log details email to: " . $nodes);
+                    debug_log("Email subject: " . $EmailSubject9);
+                    echo "<div style='margin: 10px 0; padding: 10px; background: #fff3cd; border-left: 3px solid #ffc107;'>";
+                    echo "⏳ <strong>Sending log details email...</strong> Please wait...";
+                    echo "</div>\n";
+                    flush();
+                    
+                    $start_time = microtime(true);
+                    
+                    try {
+                        $context = stream_context_create($options);
+                        $result = @file_get_contents($nodes, false, $context);
+                        $elapsed = round(microtime(true) - $start_time, 2);
+                        
+                        if ($result === false) {
+                            $error = error_get_last();
+                            debug_log("✗ ERROR sending log details email after {$elapsed}s: " . ($error['message'] ?? 'Unknown error'));
+                            debug_log("⚠ Continuing without log email...");
+                        } else {
+                            debug_log("✓ Log details email sent in {$elapsed}s");
+                        }
+                    } catch (Exception $e) {
+                        debug_log("✗ EXCEPTION sending log details email: " . $e->getMessage());
+                    }
+                    */
 
 
     
 echo "insert into voucher_Details (MembershipNumber,VoucherBookletNumber)values('" . $GenNm . "','" . $serialNm . "')" ; 
-                    $d = mysqli_query($conn, "insert into voucher_Details (MembershipNumber,VoucherBookletNumber)values('" . $GenNm . "','" . $serialNm . "')");
+                    debug_log("Inserting voucher_Details: MembershipNumber=$GenNm, VoucherBookletNumber=$serialNm");
+                    
+                    $insert_query = "insert into voucher_Details (MembershipNumber,VoucherBookletNumber)values('" . $GenNm . "','" . $serialNm . "')";
+                    debug_log("SQL Query: " . $insert_query);
+                    
+                    $d = mysqli_query($conn, $insert_query);
 
+                    if (!$d) {
+                        debug_log("✗ ERROR inserting voucher_Details: " . mysqli_error($conn));
+                        debug_log("MySQL Error Code: " . mysqli_errno($conn));
+                    } else {
+                        debug_log("✓ voucher_Details inserted successfully");
+                    }
 
                     if ($d) {
-                        mysqli_commit($conn);
+                        debug_log("Committing transaction...");
+                        $commit_result = mysqli_commit($conn);
+                        if ($commit_result) {
+                            debug_log("✓ Transaction committed successfully");
+                        } else {
+                            debug_log("✗ ERROR committing transaction: " . mysqli_error($conn));
+                        }
+                    } else {
+                        debug_log("⚠ Skipping commit due to voucher_Details insert failure");
                     }
                     ?>
                                     <script>
@@ -2430,6 +2718,7 @@ echo "insert into voucher_Details (MembershipNumber,VoucherBookletNumber)values(
 
                                 <?php
                 } else {
+                    debug_log("✗ Transaction ROLLBACK - voucher_Details insert failed");
                     echo 'Rollback';
                     mysqli_rollback($conn);
                     echo mysqli_error($conn);
@@ -2438,6 +2727,7 @@ echo "insert into voucher_Details (MembershipNumber,VoucherBookletNumber)values(
 
 
             } else {
+                debug_log("✗ ERROR - Main query insert failed: " . mysqli_error($conn));
                 echo "err -";
                 echo mysqli_error($conn);//"<script>swal('Error!')</script>";
             }
@@ -2466,6 +2756,20 @@ echo "insert into voucher_Details (MembershipNumber,VoucherBookletNumber)values(
         }
     }
 
+    ?>
+    <?php
+    $total_time = round(microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"], 2);
+    $peak_memory = round(memory_get_peak_usage() / 1024 / 1024, 2);
+    
+    debug_log("=== SCRIPT COMPLETED SUCCESSFULLY ===");
+    debug_log("Total execution time: {$total_time} seconds");
+    debug_log("Peak memory usage: {$peak_memory}MB");
+    
+    echo "</div>"; // Close debug container
+    echo "<div style='max-width: 1200px; margin: 20px auto; padding: 20px; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 5px;'>";
+    echo "<h3 style='color: #155724; margin: 0;'>✅ Processing Complete!</h3>";
+    echo "<p style='margin: 10px 0 0 0; color: #155724;'>Total Time: <strong>{$total_time}s</strong> | Peak Memory: <strong>{$peak_memory}MB</strong></p>";
+    echo "</div>";
     ?>
 </body>
 

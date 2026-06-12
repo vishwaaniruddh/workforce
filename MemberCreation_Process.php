@@ -1,4 +1,5 @@
 <?php 
+ob_start(); // Buffer all output to prevent corrupting JSON
 session_start(); 
 
 error_reporting(E_ALL);
@@ -18,58 +19,15 @@ function debug_log($message, $data = null) {
     
     // Log to file
     error_log($log_message . "\n", 3, __DIR__ . '/demo_debug.log');
-    
-    // Display on screen with styling
-    $color = '#333';
-    if (strpos($message, '✓') !== false) {
-        $color = '#28a745'; // Green for success
-    } elseif (strpos($message, '✗') !== false) {
-        $color = '#dc3545'; // Red for errors
-    } elseif (strpos($message, '⚠') !== false) {
-        $color = '#ffc107'; // Yellow for warnings
-    } elseif (strpos($message, '===') !== false) {
-        $color = '#007bff'; // Blue for section headers
-    }
-    
-    echo "<div style='font-family: monospace; font-size: 12px; padding: 3px 10px; margin: 2px 0; background: #f8f9fa; border-left: 3px solid $color; color: $color;'>";
-    echo htmlspecialchars($log_message);
-    echo "</div>\n";
-    
-    // Force output to browser immediately
-    if (ob_get_level() > 0) {
-        ob_flush();
-    }
-    flush();
 }
-
-// Start output buffering but allow flushing
-ob_implicit_flush(true);
-
-// Display debugging header
-echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Processing...</title></head><body>";
-echo "<div style='max-width: 1200px; margin: 20px auto; padding: 20px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>";
-echo "<h2 style='color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 10px;'>🔍 Script Execution Monitor</h2>";
-echo "<div style='padding: 15px; margin: 10px 0; background: #fff3cd; border: 2px solid #ffc107; border-radius: 5px;'>";
-echo "<strong>⚠️ DEBUG MODE:</strong> Email sending is DISABLED. All emails will be skipped to speed up execution.";
-echo "</div>";
-
-debug_log("=== SCRIPT STARTED ===");
-debug_log("⚠️ DEBUG MODE: Email API calls are DISABLED");
-debug_log("PHP Version: " . phpversion());
-debug_log("Memory Limit: " . ini_get('memory_limit'));
-debug_log("Max Execution Time: " . ini_get('max_execution_time') . "s");
 ?>
-<html>
-
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.2/sweetalert2.all.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.js"></script>
-</head>
-
-<body>
-    <?php
+<?php
+    debug_log("=== SCRIPT STARTED ===");
+    debug_log("⚠️ DEBUG MODE: Email API calls are DISABLED");
+    debug_log("PHP Version: " . phpversion());
+    debug_log("Memory Limit: " . ini_get('memory_limit'));
+    debug_log("Max Execution Time: " . ini_get('max_execution_time') . "s");
+    
     debug_log("Loading config files...");
     try {
         include ('./config.php');
@@ -2696,66 +2654,31 @@ echo "insert into voucher_Details (MembershipNumber,VoucherBookletNumber)values(
                     } else {
                         debug_log("⚠ Skipping commit due to voucher_Details insert failure");
                     }
-                    ?>
-                                    <script>
-                                        swal({
-                                            title: "Success!",
-                                            text: "Thank you, Add Successfully.!",
-                                            icon: "success",
-                                            // buttons: true,
-                                            dangerMode: true,
-                                        });
-                                         window.location.href = "prospect_view.php";
-                                            // .then((willDelete) => {
-                                            //     if (willDelete) {
-                                            //         // window.open("prospect_view.php", "_self");
-                                            //           window.location.href = "prospect_view.php";
-
-                                            //     }
-                                            // });
-
-                                    </script>
-
-                                <?php
+                    
+                    ob_end_clean();
+                    echo json_encode(["status" => "success", "message" => "Thank you, Added Successfully!"]);
+                    exit;
                 } else {
                     debug_log("✗ Transaction ROLLBACK - voucher_Details insert failed");
-                    echo 'Rollback';
                     mysqli_rollback($conn);
-                    echo mysqli_error($conn);
-                    echo "<script>swal('Error!')</script>";
+                    $error = mysqli_error($conn);
+                    ob_end_clean();
+                    echo json_encode(["status" => "error", "message" => "Rollback: " . $error]);
+                    exit;
                 }
-
-
             } else {
                 debug_log("✗ ERROR - Main query insert failed: " . mysqli_error($conn));
-                echo "err -";
-                echo mysqli_error($conn);//"<script>swal('Error!')</script>";
+                $error = mysqli_error($conn);
+                ob_end_clean();
+                echo json_encode(["status" => "error", "message" => "Main query insert failed: " . $error]);
+                exit;
             }
-
-
-        } else { ?>
-                    <script>
-                        swal({
-                            title: "Booklet Series not Available!",
-                            text: "So Sorry, Member Not Created !",
-                            icon: "warning",
-                            // buttons: true,
-                            dangerMode: true,
-                        });
-                         window.location.href = "prospect_view.php";
-                            // .then((willDelete) => {
-                            //     if (willDelete) {
-                            //         // window.open("prospect_view.php", "_self");
-                            //           window.location.href = "prospect_view.php";
-
-                            //     }
-                            // });
-
-                    </script>
-                <?php
+        } else {
+            ob_end_clean();
+            echo json_encode(["status" => "error", "message" => "Booklet Series not Available! So Sorry, Member Not Created!"]);
+            exit;
         }
     }
-
     ?>
     <?php
     $total_time = round(microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"], 2);
@@ -2765,12 +2688,8 @@ echo "insert into voucher_Details (MembershipNumber,VoucherBookletNumber)values(
     debug_log("Total execution time: {$total_time} seconds");
     debug_log("Peak memory usage: {$peak_memory}MB");
     
-    echo "</div>"; // Close debug container
-    echo "<div style='max-width: 1200px; margin: 20px auto; padding: 20px; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 5px;'>";
-    echo "<h3 style='color: #155724; margin: 0;'>✅ Processing Complete!</h3>";
-    echo "<p style='margin: 10px 0 0 0; color: #155724;'>Total Time: <strong>{$total_time}s</strong> | Peak Memory: <strong>{$peak_memory}MB</strong></p>";
-    echo "</div>";
+    // In case execution falls through (e.g. no conditionals were met)
+    ob_end_clean();
+    echo json_encode(["status" => "error", "message" => "Unexpected end of script. No operation performed."]);
+    exit;
     ?>
-</body>
-
-</html>

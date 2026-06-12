@@ -336,70 +336,8 @@ if(MemshipDts_GST_number!="" && MemshipDts_GST_number.length<"15"){
 
 <main class="admin-main">
     <!--site header begins-->
-    <?php include('footer.php');?>
+    <?php include('navbar.php');?>
 
-<script>
-$(document).ready(function() {
-    $("#memberForm").on("submit", function(e) {
-        e.preventDefault();
-        
-        if(!val()) {
-            return false;
-        }
-
-        var formData = new FormData(this);
-        var submitBtn = $("#submitBtn");
-        var originalText = submitBtn.text();
-        
-        submitBtn.prop("disabled", true).text("Processing...");
-        
-        $.ajax({
-            url: "MemberCreation_Process.php",
-            type: "POST",
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                submitBtn.prop("disabled", false).text(originalText);
-                try {
-                    var res = JSON.parse(response);
-                    if(res.status === "success") {
-                        swal({
-                            title: "Success",
-                            text: res.message || "Membership Created Successfully!",
-                            type: "success"
-                        }, function() {
-                            window.location.href = "Members_view.php"; // Redirect or refresh
-                        });
-                    } else {
-                        swal("Error", res.message || "Something went wrong.", "error");
-                    }
-                } catch(e) {
-                    // Fallback if not pure JSON
-                    if(response.indexOf("success") !== -1 || response.indexOf("Created") !== -1 || response.length > 500) {
-                        swal({
-                            title: "Success",
-                            text: "Membership Created Successfully!",
-                            type: "success"
-                        }, function() {
-                            window.location.href = "Members_view.php";
-                        });
-                    } else {
-                        swal("Error", "Unexpected response from server.", "error");
-                        console.error(response);
-                    }
-                }
-            },
-            error: function(xhr, status, error) {
-                submitBtn.prop("disabled", false).text(originalText);
-                swal("Error", "Server error. Please try again.", "error");
-            }
-        });
-    });
-});
-</script>
-</body>
-</html>
 <!--site header ends -->    <section class="admin-content">
         <div class="bg-dark">
             <div class="container  m-b-30">
@@ -431,22 +369,9 @@ $(document).ready(function() {
                         
                         <!-- <form method="POST" action="MemberCreation_Review.php"  enctype="multipart/form-data"  onsubmit="return validation()">-->
                        
-                      <form id="memberForm" method="POST" enctype="multipart/form-data" >
+                      <form method="POST" action="MemberCreation_Review.php"  enctype="multipart/form-data" onsubmit="return val()" >
                         <div class="card-body">
-                        
-                        <div class="accordion" id="memberAccordion">
-                        
-                        <!-- Static Info Accordion -->
-                        <div class="card bg-transparent">
-                            <div class="card-header bg-dark p-0" id="headingStatic">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link text-white text-left w-100" type="button" data-toggle="collapse" data-target="#collapseStatic" aria-expanded="true" aria-controls="collapseStatic">
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Static Info
-                                    </button>
-                                </h5>
-                            </div>
-                            <div id="collapseStatic" class="collapse show" aria-labelledby="headingStatic" data-parent="#memberAccordion">
-                                <div class="card-body">
+                              <div class="bg-dark" style="color:white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Static Info</div>
                           <input type="hidden" value="<?php echo $HOtelNameChk ;?>" id="hotlName" name="hotlName" required>
                          
                          
@@ -501,21 +426,8 @@ $(document).ready(function() {
                        
                         
                         
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Primary Member Entry Accordion -->
-                        <div class="card bg-transparent">
-                            <div class="card-header bg-dark p-0" id="headingPrimary">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link text-white text-left w-100 collapsed" type="button" data-toggle="collapse" data-target="#collapsePrimary" aria-expanded="false" aria-controls="collapsePrimary">
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Part 1. Primary Member Entry
-                                    </button>
-                                </h5>
-                            </div>
-                            <div id="collapsePrimary" class="collapse" aria-labelledby="headingPrimary" data-parent="#memberAccordion">
-                                <div class="card-body">
+                            <br /><br />
+                             <div class="bg-dark" style="color:white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Part 1. Primary Member Entry</div>
                         
                                   <div class="form-group">
                                   <label for="inputAddress2">Title</label>
@@ -732,24 +644,9 @@ $(document).ready(function() {
                             <br /><br />
                             
                             
-                                </div>
-                            </div>
-                        </div>
-
                             <!--===================================== if Marital Status Married (start)================================-->
                          
-                        <div id="Spouse" style="display:none"> 
-                            <!-- Spouse Member Entry Accordion -->
-                            <div class="card bg-transparent">
-                                <div class="card-header bg-dark p-0" id="headingSpouse">
-                                    <h5 class="mb-0">
-                                        <button class="btn btn-link text-white text-left w-100 collapsed" type="button" data-toggle="collapse" data-target="#collapseSpouse" aria-expanded="false" aria-controls="collapseSpouse">
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Part 2.  Spouse Member Entry
-                                        </button>
-                                    </h5>
-                                </div>
-                                <div id="collapseSpouse" class="collapse" aria-labelledby="headingSpouse" data-parent="#memberAccordion">
-                                    <div class="card-body">
+                           <div id="Spouse" style="display:none"> <div class="bg-dark" style="color:white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Part 2.  Spouse Member Entry</div>
                             
                              <div class="form-group">
                                   <label for="inputAddress2">Title</label>
@@ -850,23 +747,14 @@ $(document).ready(function() {
                                 </div>
                       <br /><br />
                       
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </div>    
                             <!--===================================== if Marital Status Married (end)================================-->
-                             
-                        <!-- Membership Details Accordion -->
-                        <div class="card bg-transparent">
-                            <div class="card-header bg-dark p-0" id="headingMembership">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link text-white text-left w-100 collapsed" type="button" data-toggle="collapse" data-target="#collapseMembership" aria-expanded="false" aria-controls="collapseMembership">
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Part 3 Membership Details
-                                    </button>
-                                </h5>
-                            </div>
-                            <div id="collapseMembership" class="collapse" aria-labelledby="headingMembership" data-parent="#memberAccordion">
-                                <div class="card-body">
+                            
+                            
+                            
+                            
+                              <!--======================== Part 3 Membership Details (End)================================--->
+                             <div class="bg-dark" style="color:white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Part 3 Membership Details</div>
                         
                         <?php 
                         
@@ -1057,21 +945,8 @@ $(document).ready(function() {
                                 <br /> <br />
                                 
                                 
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Documentation Accordion -->
-                        <div class="card bg-transparent">
-                            <div class="card-header bg-dark p-0" id="headingDocs">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link text-white text-left w-100 collapsed" type="button" data-toggle="collapse" data-target="#collapseDocs" aria-expanded="false" aria-controls="collapseDocs">
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Part 4. Documentation
-                                    </button>
-                                </h5>
-                            </div>
-                            <div id="collapseDocs" class="collapse" aria-labelledby="headingDocs" data-parent="#memberAccordion">
-                                <div class="card-body">
+                                  <!--======================== Part 4  Documentation (Start)================================--->
+                                <div class="bg-dark" style="color:white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Part 4. Documentation</div>
                              
                                  <div class="form-group">
                                     <label for="inputEmail4">Upload Signatures</label>
@@ -1091,21 +966,8 @@ $(document).ready(function() {
                                 
                                  
                                 
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Relationships Accordion -->
-                        <div class="card bg-transparent">
-                            <div class="card-header bg-dark p-0" id="headingRelations">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link text-white text-left w-100 collapsed" type="button" data-toggle="collapse" data-target="#collapseRelations" aria-expanded="false" aria-controls="collapseRelations">
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Part 5. Relationships
-                                    </button>
-                                </h5>
-                            </div>
-                            <div id="collapseRelations" class="collapse" aria-labelledby="headingRelations" data-parent="#memberAccordion">
-                                <div class="card-body">
+                                   <!--======================== Part 5 Relationships (Start)================================--->
+                                 <div class="bg-dark" style="color:white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Part 5. Relationships</div>
                         
                                 
                                   <div class="form-row">
@@ -1130,27 +992,7 @@ $(document).ready(function() {
                                 
                                 
                                       <!--======================== Part 6 Issue Membership (start)================================--->
-                              
-                                
-                                
-                                
-                                
-                                
-                                  </div>
-                            </div>
-                        </div>
-
-                        <!-- Issue Membership Accordion -->
-                        <div class="card bg-transparent">
-                            <div class="card-header bg-dark p-0" id="headingIssue">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link text-white text-left w-100 collapsed" type="button" data-toggle="collapse" data-target="#collapseIssue" aria-expanded="false" aria-controls="collapseIssue">
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Part 6. Issue Membership
-                                    </button>
-                                </h5>
-                            </div>
-                            <div id="collapseIssue" class="collapse" aria-labelledby="headingIssue" data-parent="#memberAccordion">
-                                <div class="card-body">
+                              <div class="bg-dark" style="color:white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Part 6. Issue Membership</div>
                         
                              
                              
@@ -1193,14 +1035,11 @@ $(document).ready(function() {
                                 <!--======================== Part 6 Issue Membership (End)================================--->
                              
                                 
-                                               </div>
-                            </div>
-                        </div>
-
-                        </div> <!-- End Accordion -->
-                        
-                         <div class="form-group text-center mt-4">
-                                <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">Submit Membership</button>
+                            
+<br />
+                          
+                            <div class="form-group">
+                                <input  type="submit" class="btn btn-primary" value="Review"/>
                             </div>
                         </div>
                         </form>
