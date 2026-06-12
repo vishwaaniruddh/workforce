@@ -1,4 +1,4 @@
-<?php include('config.php');
+﻿<?php include('config.php');
         $id='76656';
         $qgen= mysqli_query($conn,"select * from Members where Static_LeadId='".$id."'");
         $row=mysqli_fetch_row($qgen);
@@ -22,7 +22,7 @@
         
         ?>
         <meta charset="utf-8">
-        <?
+        <?php 
          $EmailSubject2="Welcome to Orchid First";
                 $message2.='<table width="70%" align="center">';
                    $message2.='<tr>';

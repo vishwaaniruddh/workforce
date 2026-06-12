@@ -1,4 +1,4 @@
-<?php session_start();?>
+﻿<?php session_start();?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -624,7 +624,7 @@ sumitfunc(action);
                                     <label for="inputPassword4">Country</label>
                               <select class="form-control" name="Country" id="Country">
               <option value=" ">Select Country</option>
-              <option value="India" <?php if($Main_id!=""){?>selected<?php }else{?>selected <?} ?>>India</option>
+              <option value="India" <?php if($Main_id!=""){?>selected<?php }else{?>selected <?php } ?>>India</option>
           
           </select>
                                 </div>
@@ -825,3 +825,4 @@ sumitfunc(action);
          }
     }
 </script>
+

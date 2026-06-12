@@ -1,4 +1,4 @@
-<?php session_Start();
+﻿<?php session_Start();
 include ("config.php");
 
 
@@ -292,7 +292,7 @@ if(date('d', strtotime($_row['entryDate'])) >=25 ){
                                    	    ?>
                                    	</td>
                                    	
-                                   	<?
+                                   	<?php 
                                    	if(get_member_details('NewGenerateMember_Id',$member_id)>0){ ?>
                                    	
                                        	<td><?php echo 'Renew'; ?></td>                                   	    
@@ -442,5 +442,6 @@ if(date('d', strtotime($_row['entryDate'])) >=25 ){
 <!--<script src="assets/js/datatable-data.js"></script>-->
 </body>
 </html>
+
 
 

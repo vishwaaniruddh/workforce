@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include('config.php');
 // $id='103';
 $qgen= mysqli_query($conn,"select * from Members where Static_LeadId='".$id."'");
@@ -30,7 +30,7 @@ $date = strtotime($ext);
  $ext1=date('M Y', $date);
 ?>
 <meta charset="utf-8">
-<?
+<?php 
  $rev_EmailSubject2="Revalidation of Membership Certificates";
         $rev_msg.='<table width="70%" align="center">';
            $rev_msg.='<tr>';

@@ -1,4 +1,4 @@
-<?php session_start();
+﻿<?php session_start();
 include('config.php');
 
 
@@ -160,7 +160,7 @@ $MembershipDetails_Level = $fetchMem['MembershipDetails_Level'];
                                         
                                     <option value="">Select Membership Type</option>
                                     
-                                    <?
+                                    <?php 
                                     $member_type_sql = mysqli_query($conn,"select * from Level");
                                     
                                     while($member_type_sql_result = mysqli_fetch_assoc($member_type_sql)){ 
@@ -319,7 +319,7 @@ $MembershipDetails_Level = $fetchMem['MembershipDetails_Level'];
                                 
 
 
-<?
+<?php 
 $member_sql = mysqli_query($conn,"select * from Members where Static_LeadID='".$id."'");
 $member_sql_result = mysqli_fetch_assoc($member_sql);
 

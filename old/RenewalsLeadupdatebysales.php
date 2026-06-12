@@ -1,4 +1,4 @@
-<?php session_start();
+﻿<?php session_start();
 include ("config.php");
 ?>
 <!DOCTYPE html>
@@ -115,9 +115,9 @@ include ("config.php");
   $leadCount=mysqli_num_rows($leadUpdt);
 	if($leadCount>0){
 	?><input type="button" id="qtnview<?php echo $srn;?>" class="btn btn-primary"  onclick="window.open('updateRenewalComment.php?ids=<?php echo $_row['Lead_id'];?>', '_blank', 'location=yes,height=400,width=600,left=400,top=200,scrollbars=yes,status=yes');" value="View"><?php } ?> </td>
-	<td><?php if($_row['Status']!='4'){?><input type="button" class="btn btn-primary"  id="qtnview<?php echo $srn;?>" onclick="window.open('Renewals_leadupdate.php?id=<?php echo $_row['LeadId'];?>','_self');" value="Lead Update"><? } ?> </td>
+	<td><?php if($_row['Status']!='4'){?><input type="button" class="btn btn-primary"  id="qtnview<?php echo $srn;?>" onclick="window.open('Renewals_leadupdate.php?id=<?php echo $_row['LeadId'];?>','_self');" value="Lead Update"><?php  } ?> </td>
 
-		<td><?php if($_row['Status']!='4'){?><input type="button" class="btn btn-primary"  id="qtnview<?php echo $srn;?>" onclick="window.open('member_Payment_Renewal.php?id=<?php echo $_row['LeadId'];?>','_self');" value="Payment"> <? } ?></td>
+		<td><?php if($_row['Status']!='4'){?><input type="button" class="btn btn-primary"  id="qtnview<?php echo $srn;?>" onclick="window.open('member_Payment_Renewal.php?id=<?php echo $_row['LeadId'];?>','_self');" value="Payment"> <?php  } ?></td>
 
  <td><input type="button" class="btn btn-primary" onclick="window.open('lead_entry1.php?id=<?php echo $_row['Lead_id'];?>&excelid=0','_self');" value="Edit"></td>
 

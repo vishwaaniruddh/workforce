@@ -1,4 +1,4 @@
-<?php session_start();
+﻿<?php session_start();
 include('config.php');
 
 
@@ -104,7 +104,7 @@ $fetchMem=mysqli_fetch_array($QuryGetMem);
                      <form action="renewal_extension_process.php?id=<?php echo $id;?>" method="post">
 <h2>Select Vouchers To Extend</h2>
 
-<?
+<?php 
 $member_sql = mysqli_query($conn,"select * from Members where Static_LeadID='".$id."'");
 $member_sql_result = mysqli_fetch_assoc($member_sql);
     $name = $member_sql_result['Primary_nameOnTheCard'];
@@ -150,7 +150,7 @@ while($voucher_sql_result = mysqli_fetch_assoc($voucher_sql)){
         <br>
         <br>
         
-        <?
+        <?php 
    //     $get_sql = mysqli_query($conn,"select * from Members where Static_LeadID='".$id."'");
         
     //    $get_sql_result = mysqli_fetch_assoc($get_sql);
@@ -172,7 +172,7 @@ while($voucher_sql_result = mysqli_fetch_assoc($voucher_sql)){
 
         <select class="form-control" name="extension">
                     <option value=""> Select </option>
-                    <?
+                    <?php 
                                     
                         $sql = mysqli_query($conn,"select * from extension where status='1'");
                         $i=1;
@@ -241,7 +241,7 @@ while($voucher_sql_result = mysqli_fetch_assoc($voucher_sql)){
                                         
                                     <option value="">Select Membership Type</option>
                                     
-                                    <?
+                                    <?php 
                                     $member_type_sql = mysqli_query($conn,"select * from Level");
                                     
                                     while($member_type_sql_result = mysqli_fetch_assoc($member_type_sql)){ 

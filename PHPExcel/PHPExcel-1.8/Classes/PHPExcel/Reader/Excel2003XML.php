@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 /** PHPExcel root directory */
 if (!defined('PHPEXCEL_ROOT')) {
@@ -81,7 +81,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 
         $signature = array(
                 '<?xml version="1.0"',
-                '<?mso-application progid="Excel.Sheet"?>'
+                '<?php mso-application progid="Excel.Sheet"?>'
             );
 
         // Open file
@@ -799,3 +799,4 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
         return $value;
     }
 }
+

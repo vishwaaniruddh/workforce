@@ -1,4 +1,4 @@
-<? include('config.php');
+﻿<?php  include('config.php');
 
 $memberid = $_POST['memberid'];
 $memberid= $memberid+1;
@@ -97,17 +97,18 @@ if(mysqli_query($conn,$update_sql)){
         
         alert('Renewed Successfully');
         
-        window.location.href="custom_renew.php?id=<? echo $Static_LeadID ; ?>"
+        window.location.href="custom_renew.php?id=<?php  echo $Static_LeadID ; ?>"
     </script>
     
-<? }
+<?php  }
 else{ ?>
     <script>
                 alert('Renewed Error');
         
-        window.location.href="custom_renew.php?id=<? echo $Static_LeadID ; ?>"
+        window.location.href="custom_renew.php?id=<?php  echo $Static_LeadID ; ?>"
     </script>
-<? } ?>
+<?php  } ?>
+
 
 
 

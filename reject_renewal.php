@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+﻿<?php session_start(); ?>
 <?php include("config.php");?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,7 +46,7 @@
                         <h4 class=""> <span class="btn btn-white-translucent">
                                 <i class="mdi mdi-table "></i></span> Reasons To Reject
                                 
-                                <?
+                                <?php 
                                 
                                 $date = date("Y-m-d H:i:s");
                                 // echo $date;
@@ -97,7 +97,7 @@
         <br>
             <div class="demo-checkbox">
         
-                    <?
+                    <?php 
                         // var_dump($_GET);
                                     
                         $sql = mysqli_query($conn,"select * from CloseRenewal where status='1'");

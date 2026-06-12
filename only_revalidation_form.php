@@ -1,4 +1,4 @@
-<?php session_start();
+﻿<?php session_start();
 include('config.php');
 
 
@@ -195,7 +195,7 @@ $fetchMem=mysqli_fetch_array($QuryGetMem);
                                 
 
 
-<?
+<?php 
 $member_sql = mysqli_query($conn,"select * from Members where Static_LeadID='".$id."'");
 $member_sql_result = mysqli_fetch_assoc($member_sql);
 

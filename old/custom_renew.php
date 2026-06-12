@@ -1,4 +1,4 @@
-<?php session_start();
+﻿<?php session_start();
 include('config.php');
 
 
@@ -76,9 +76,9 @@ $fetchMem=mysqli_fetch_array($QuryGetMem);
             <form action="custom_renewal_process.php" method="post">
                 
                 
-                <input type="hidden" name="memberid" value="<? echo get_members_data($_GET['id'],'GenerateMember_Id'); ?>">
+                <input type="hidden" name="memberid" value="<?php  echo get_members_data($_GET['id'],'GenerateMember_Id'); ?>">
                 
-                <input type="hidden" name="Static_LeadID" value="<? echo $_GET['id'];?>">
+                <input type="hidden" name="Static_LeadID" value="<?php  echo $_GET['id'];?>">
                 
             <div class="row">
                 
@@ -121,18 +121,18 @@ $fetchMem=mysqli_fetch_array($QuryGetMem);
                                         
                                     <option value="">Select Membership Type</option>
                                     
-                                    <?
+                                    <?php 
                                     $member_type_sql = mysqli_query($conn,"select * from Level");
                                     
                                     while($member_type_sql_result = mysqli_fetch_assoc($member_type_sql)){ 
                                     $level_id = $member_type_sql_result['Leval_id'];
                                     ?>
                                        
-                                       <option value="<? echo $level_id ;?>" <? if(get_members_data($_GET['id'],'MembershipDetails_Level')==$level_id){ echo 'selected' ; } ?>>
-                                           <? echo $member_type_sql_result['level_name'];?>
+                                       <option value="<?php  echo $level_id ;?>" <?php  if(get_members_data($_GET['id'],'MembershipDetails_Level')==$level_id){ echo 'selected' ; } ?>>
+                                           <?php  echo $member_type_sql_result['level_name'];?>
                                        </option>
                                         
-                                    <? }
+                                    <?php  }
                                     
                                     ?>       
                                     </select>
@@ -144,7 +144,7 @@ $fetchMem=mysqli_fetch_array($QuryGetMem);
                                  
                                 <div class="form-group">
                                     <label for="inputEmail4">Membership Fee</label>
-                                    <input type="text" class="form-control" id="MembershipDetails_Fee" name="MembershipDetails_Fee" value="<? echo get_members_data($_GET['id'],'MembershipDetails_Fee')?>" readonly>
+                                    <input type="text" class="form-control" id="MembershipDetails_Fee" name="MembershipDetails_Fee" value="<?php  echo get_members_data($_GET['id'],'MembershipDetails_Fee')?>" readonly>
                                    
                                  </div>
                         
@@ -175,7 +175,7 @@ $fetchMem=mysqli_fetch_array($QuryGetMem);
                                  
                                   <div class="form-group">
                                     <label for="inputEmail4">Payment Date</label>
-                                     <input type="text" name="payment_date" id="datepicker" class="form-control" value="<? echo date("Y/m/d")?>">
+                                     <input type="text" name="payment_date" id="datepicker" class="form-control" value="<?php  echo date("Y/m/d")?>">
                                  </div>
                                  
                                  
@@ -192,7 +192,7 @@ $fetchMem=mysqli_fetch_array($QuryGetMem);
                                           $runMode=mysqli_query($conn,"select * from MembershipPaymentMode where Program_ID='".$fetchLevel['Program_ID']."'");
                                           while($fetchMode=mysqli_fetch_array($runMode)){
                                           ?>
-                                          <option value="<?php echo $fetchMode['Payment_mode'];?>" <?php  if($fetchMode['Payment_mode']==$fetchMem['MembershipDts_PaymentMode']){?>Selected <? } ?>    ><?php echo $fetchMode['Payment_mode'];?></option>
+                                          <option value="<?php echo $fetchMode['Payment_mode'];?>" <?php  if($fetchMode['Payment_mode']==$fetchMem['MembershipDts_PaymentMode']){?>Selected <?php  } ?>    ><?php echo $fetchMode['Payment_mode'];?></option>
                                           <?php } ?>
                                     </select> 
                                  

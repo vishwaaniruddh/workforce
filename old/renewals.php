@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+﻿<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,15 +97,15 @@ $next_due_date = date('Y-m-d', strtotime("+30 days"));
         while($_row=mysqli_fetch_array($qrys)) {
         
         ?>
-<tr <? if($_row['ExpiryDate']>date('Y-m-d')){ echo 'class="about_to_expire"'; } else{ echo 'class="expire"';}?>>
+<tr <?php  if($_row['ExpiryDate']>date('Y-m-d')){ echo 'class="about_to_expire"'; } else{ echo 'class="expire"';}?>>
     
     
         <td><?php echo $srn;?></td>
         <td><?php echo $_row['Primary_nameOnTheCard']; ?></td>
         <td><?php echo $_row['Spouse_mob1MArid1']; ?></td>
         <td><?php echo $_row['ExpiryDate']; ?></td>
-        <td><a class="btn btn-danger" href="custom_renew.php?id=<? echo $_row['Static_LeadID'];?>">Renew</a></td>
-        <td><a class="btn btn-success" href="MemberEdit.php?id=<? echo $_row['Static_LeadID'];?>">Update</a></td>
+        <td><a class="btn btn-danger" href="custom_renew.php?id=<?php  echo $_row['Static_LeadID'];?>">Renew</a></td>
+        <td><a class="btn btn-success" href="MemberEdit.php?id=<?php  echo $_row['Static_LeadID'];?>">Update</a></td>
         
     </tr>
 			

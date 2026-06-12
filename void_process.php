@@ -1,4 +1,4 @@
-<?php Session_Start();?>
+﻿<?php Session_Start();?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,7 +85,7 @@ $fetchState=mysqli_fetch_array($QuryState);*/
                         </div>
                         
                         
-                        <?
+                        <?php 
                         
                         $id = $_POST['id'];
                         $void_reason = $_POST['void_reason'];

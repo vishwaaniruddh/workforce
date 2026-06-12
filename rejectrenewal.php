@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+﻿<?php session_start(); ?>
 <?php include("config.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +53,7 @@
 
 
 
-<?
+<?php 
 if(isset($_POST['submit'])){
     
     $reason = $_POST['reason'];

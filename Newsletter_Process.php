@@ -1,4 +1,4 @@
-<?php session_start();?>
+﻿<?php session_start();?>
 <html>
  <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.2/sweetalert2.all.min.js"></script>
@@ -180,7 +180,7 @@ $message2.='</table></body></html>';
 });
 
           </script>
-          <?
+          <?php 
           $leadsmail2=" Orchidmembership@loyaltician.com";
           $mailheader2 = "From: ".$leadsmail2."\r\n"; 
           $mailheader2.= "Reply-To: ".$leadsmail2."\r\n"; 
@@ -376,7 +376,7 @@ $message2.='</table></body></html>';
 });
 
           </script>
-          <?
+          <?php 
           
           
           $leadsmail2=" Orchidmembership@loyaltician.com";
@@ -582,7 +582,7 @@ $message2.='</table></body></html>';
 });
 
           </script>
-          <?
+          <?php 
           
           
           $leadsmail2=" Orchidmembership@loyaltician.com";

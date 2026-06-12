@@ -1,4 +1,4 @@
-<?php session_start();
+﻿<?php session_start();
 include('config.php');
 
 $leadid=$_REQUEST['id'];
@@ -260,7 +260,7 @@ $( function() {
                         </div>
                         
                         <div class="card-body ">
-                            <?
+                            <?php 
                             $get_pre_sql = mysqli_query($conn,"select * from RenewalLeadUpdates where leadId='".$_GET['id']."' order by UpdateId desc");
                             
                             while($get_pre_sql_result = mysqli_fetch_assoc($get_pre_sql)){ ?>

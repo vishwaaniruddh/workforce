@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+﻿<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -185,7 +185,7 @@ $timestamp = strtotime($fetch_dispatch['dispatchDate']);
 <td></td>
 <td></td>
 <td></td>
-<?}?>
+<?php }?>
 	
 
 

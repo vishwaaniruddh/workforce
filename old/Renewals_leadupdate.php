@@ -1,4 +1,4 @@
-<?php session_start();
+﻿<?php session_start();
 include('config.php');
 
 $leadid=$_REQUEST['id'];
@@ -225,7 +225,7 @@ $( function() {
                                     while($qfetch=mysqli_fetch_array($qrycolse)){
                               ?>
                                <option value="<?php echo $qfetch['CloseLeadReason'];?>" id="<?php echo $qfetch['CloseLeadReason'];?>"><?php echo $qfetch['CloseLeadReason'];?></option>
-                               <? } ?>
+                               <?php  } ?>
                               </select> 
                                <!-- <input type="text" class="form-control" id="ClosedReason" name="ClosedReason" placeholder="Closed Reason *"  required>-->
                             </div>

@@ -1,4 +1,4 @@
-<?php Session_Start();?>
+﻿<?php Session_Start();?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -582,7 +582,7 @@ $(document).ready(function() {
                             <div class="form-row">
                                 <div class="form-group col-md-4 col-sm-4">
                                     <label for="inputEmail4">Mobile Code *</label>
-                                    <input type="text" class="form-control"  name="Primary_mcode1" id="Primary_mcode1" maxlength="3"  onkeypress="return isNumberKey(event)"  value="+<?php if($Mainid!=""){echo $fetchLead['MobileCode'];}else{?>91<?} ?>"  placeholder="eg. 91" required >
+                                    <input type="text" class="form-control"  name="Primary_mcode1" id="Primary_mcode1" maxlength="3"  onkeypress="return isNumberKey(event)"  value="+<?php if($Mainid!=""){echo $fetchLead['MobileCode'];}else{?>91<?php } ?>"  placeholder="eg. 91" required >
                                 </div>
                                 <div class="form-group col-md-8 col-sm-8">
                                     <label for="inputPassword4">Mobile number *</label>&nbsp;<label id="label5"></label>

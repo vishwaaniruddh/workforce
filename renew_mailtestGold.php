@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include('config.php');
 $id='76730';
 $qgen= mysqli_query($conn,"select * from Members where Static_LeadId='".$id."'");
@@ -18,7 +18,7 @@ $nodes = 'https://arpeeindustries.com/mail.php';
 
 ?>
 <meta charset="utf-8">
-<?
+<?php 
  $EmailSubject2="Welcome to Club Four Points";
         $message2.='<table width="70%" align="center">';
            $message2.='<tr>';

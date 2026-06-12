@@ -1,4 +1,4 @@
-<?
+﻿<?php 
 include "qrlib.php";
 
 //QRcode::png('PHP QR Code :)', 'myqr.png', $errorCorrectionLevel, $matrixPointSize, 2);

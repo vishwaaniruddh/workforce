@@ -1,4 +1,4 @@
-<?
+﻿<?php 
 $chartConfigArr = "{
   type: 'doughnut',
   data: {

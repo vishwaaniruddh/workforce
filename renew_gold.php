@@ -1,4 +1,4 @@
-<?php include('config.php');
+﻿<?php include('config.php');
 // $id='76730';
 include('number_to_wordConvert.php');
 $id = $Static_LeadID ;
@@ -96,7 +96,7 @@ $pdf->SetFillColor(255, 255, 127);
 
 ?>
 <meta charset="utf-8">
-<?
+<?php 
  $EmailSubject2="Welcome to Club Four Points";
  
  

@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+﻿<?php session_start(); ?>
 <?php include("config.php");
 
 
@@ -90,7 +90,7 @@ function get_voucher_name($level_id,$voucher_id){
                                 <i class="mdi mdi-table "></i></span> 
                                 Membership Extension
                                 
-                                   <?
+                                   <?php 
                                    
 
                                 $id = $_GET['id']; 
@@ -195,7 +195,7 @@ else{ ?>
 
 
 
-<?
+<?php 
 $member_sql = mysqli_query($conn,"select * from Members where Static_LeadID='".$id."'");
 $member_sql_result = mysqli_fetch_assoc($member_sql);
 
@@ -216,7 +216,7 @@ $expdate=date('M Y', $date);
         <br>
         <br>
         
-        <?
+        <?php 
     //    $get_sql = mysqli_query($conn,"select * from Members where Static_LeadID='".$id."'");
         
    //     $get_sql_result = mysqli_fetch_assoc($get_sql);
@@ -272,7 +272,7 @@ $expdate=date('M Y', $date);
 
                                 <input type="checkbox" onclick="check_all(this);" /> Select All <br/>
                                 
-<?
+<?php 
 
 
 $voucher_sql = mysqli_query($conn,"select * from BarcodeScan where Voucher_id like '%".$booklet_series."%' and is_extended=0 and Available=0");
