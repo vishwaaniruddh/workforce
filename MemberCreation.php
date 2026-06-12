@@ -1,4 +1,4 @@
-﻿<?php Session_Start();?>
+<?php Session_Start();?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -336,7 +336,7 @@ if(MemshipDts_GST_number!="" && MemshipDts_GST_number.length<"15"){
 
 <main class="admin-main">
     <!--site header begins-->
-    <?php include('footer.php');?>
+    <?php include('navbar.php');?>
 
 <script>
 $(document).ready(function() {
