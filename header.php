@@ -77,4 +77,12 @@ $(function(){
     th, td {
         white-space: nowrap;
     }
+    
+    @media (max-width: 768px) {
+        .admin-header .sidebar-toggle {
+            z-index: 9999 !important;
+            position: relative !important;
+            pointer-events: auto !important;
+        }
+    }
 </style>

@@ -334,6 +334,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'get_dashboard_data') {
 
     /* ── Responsive tweaks ── */
     @media(max-width:768px) {
+        .admin-header {
+            z-index: 1050 !important;
+            position: relative;
+        }
+        .admin-header .sidebar-toggle {
+            z-index: 1051 !important;
+            pointer-events: auto !important;
+        }
         .kpi-grid { grid-template-columns: repeat(2, 1fr); padding: 0 14px 14px; }
         .dash-section { padding: 0 14px 14px; }
         .dash-hero { padding: 20px 18px 70px; }
@@ -354,11 +362,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'get_dashboard_data') {
         <a href="#" class="sidebar-toggle" data-toggleclass="sidebar-open" data-target="body"></a>
         <nav class="mr-auto my-auto">
             <ul class="nav align-items-center">
-                <li class="nav-item">
-                    <a class="nav-link" data-target="#siteSearchModal" data-toggle="modal" href="#">
-                        <i class="mdi mdi-magnify mdi-24px align-middle"></i>
-                    </a>
-                </li>
+                
             </ul>
         </nav>
         <nav class="ml-auto">
@@ -587,9 +591,16 @@ if (isset($_POST['action']) && $_POST['action'] === 'get_dashboard_data') {
 
 <!-- ══════════════ SCRIPTS ══════════════ -->
 <script src="assets/vendor/jquery/jquery.min.js"></script>
+<script src="assets/vendor/jquery-ui/jquery-ui.min.js"></script>
 <script src="assets/vendor/popper/popper.js"></script>
 <script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/vendor/select2/js/select2.full.min.js"></script>
 <script src="assets/vendor/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+<script src="assets/vendor/listjs/listjs.min.js"></script>
+<script src="assets/vendor/moment/moment.min.js"></script>
+<script src="assets/vendor/daterangepicker/daterangepicker.js"></script>
+<script src="assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script src="assets/vendor/bootstrap-notify/bootstrap-notify.min.js"></script>
 <script src="assets/js/atmos.min.js"></script>
 <script src="assets/vendor/apexchart/apexcharts.min.js"></script>
 
