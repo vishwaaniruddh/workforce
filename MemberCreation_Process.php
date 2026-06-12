@@ -112,50 +112,49 @@ function debug_log($message, $data = null) {
     
 
     // part 2.Spouse
-    $Spouse_Title = $_POST['Spouse_Title'];
-    $Spouse_FirstName = $_POST['Spouse_FirstName'];
-    $Spouse_LastName = $_POST['Spouse_LastName'];
-    $Spouse_GmailMArrid1 = $_POST['Spouse_GmailMArrid1'];
-    $Spouse_GmailMArrid2 = $_POST['Spouse_GmailMArrid2'];
-    $Spouse_PhotoUpload = $_POST['Spouse_PhotoUpload'];
-    $Spouse_mcode1Married1 = $_POST['Spouse_mcode1Married1'];
-    $Spouse_mob1MArid1 = $_POST['Spouse_mob1MArid1'];
-    $Spouse_mcode1Married2 = $_POST['Spouse_mcode1Married2'];
-    $Spouse_mob1MArid2 = $_POST['Spouse_mob1MArid2'];
-    $Spouse_Contact1codeMArid = $_POST['Spouse_Contact1codeMArid'];
-    $Spouse_Contact1codeMArid = $_POST['Spouse_Contact1codeMArid'];
-    $Spouse_Contact1Married = $_POST['Spouse_Contact1Married'];
-    $Spouse_Contact2codeMArid = $_POST['Spouse_Contact2codeMArid'];
-    $Spouse_Contact2Married = $_POST['Spouse_Contact2Married'];
-    $Spouse_DateOfBirth = $_POST['Spouse_DateOfBirth'];
-    $Spouse_nameOnTheCardMarried = $_POST['Spouse_nameOnTheCardMarried'];
+    $Spouse_Title = $_POST['Spouse_Title'] ?? "";
+    $Spouse_FirstName = $_POST['Spouse_FirstName'] ?? "";
+    $Spouse_LastName = $_POST['Spouse_LastName'] ?? "";
+    $Spouse_GmailMArrid1 = $_POST['Spouse_GmailMArrid1'] ?? "";
+    $Spouse_GmailMArrid2 = $_POST['Spouse_GmailMArrid2'] ?? "";
+    $Spouse_PhotoUpload = $_POST['Spouse_PhotoUpload'] ?? "";
+    $Spouse_mcode1Married1 = $_POST['Spouse_mcode1Married1'] ?? "";
+    $Spouse_mob1MArid1 = $_POST['Spouse_mob1MArid1'] ?? "";
+    $Spouse_mcode1Married2 = $_POST['Spouse_mcode1Married2'] ?? "";
+    $Spouse_mob1MArid2 = $_POST['Spouse_mob1MArid2'] ?? "";
+    $Spouse_Contact1codeMArid = $_POST['Spouse_Contact1codeMArid'] ?? "";
+    $Spouse_Contact1Married = $_POST['Spouse_Contact1Married'] ?? "";
+    $Spouse_Contact2codeMArid = $_POST['Spouse_Contact2codeMArid'] ?? "";
+    $Spouse_Contact2Married = $_POST['Spouse_Contact2Married'] ?? "";
+    $Spouse_DateOfBirth = $_POST['Spouse_DateOfBirth'] ?? "";
+    $Spouse_nameOnTheCardMarried = $_POST['Spouse_nameOnTheCardMarried'] ?? "";
 
-    if ($Spouse_DateOfBirth != "" || $Spouse_DateOfBirth != "01-01-1970")
+    if ($Spouse_DateOfBirth != "" && $Spouse_DateOfBirth != "01-01-1970")
         $Spouse_DOB = date('Y-m-d', strtotime($Spouse_DateOfBirth));
     else
         $Spouse_DOB = '0000-00-00';
     ////////////////////////////////////////////////////////////////////////
     
-    $MemshipDts_GST_number = $_POST['MemshipDts_GST_number'];
+    $MemshipDts_GST_number = $_POST['MemshipDts_GST_number'] ?? "";
 
     // part 4.Documentation
-    $Documentation_UploadSignatures = $_POST['Documentation_UploadSignatures'];
-    $Documentation_AddressProof = $_POST['Documentation_AddressProof'];
+    $Documentation_UploadSignatures = $_POST['Documentation_UploadSignatures'] ?? "";
+    $Documentation_AddressProof = $_POST['Documentation_AddressProof'] ?? "";
     //////////////////////////////////////////////////////////////////////////////////////
     
     // part 5. Relationships
-    $Relationships_ReferredByLEADID = $_POST['Relationships_ReferredByLEADID'];
-    $Relationships_ReferredByMEMBERSHIPID = $_POST['Relationships_ReferredByMEMBERSHIPID'];
+    $Relationships_ReferredByLEADID = $_POST['Relationships_ReferredByLEADID'] ?? "";
+    $Relationships_ReferredByMEMBERSHIPID = $_POST['Relationships_ReferredByMEMBERSHIPID'] ?? "";
     /////////////////////////////////////////////////////////////////////////////////////////
     
 
     // Part 6. Issue Membership
-    $itemCheck1 = $_POST['itemCheck1'];
-    $BookletCheck1 = $_POST['BookletCheck1'];
-    $CertificatesCheck1 = $_POST['CertificatesCheck1'];
-    $PromotionalCheck1 = $_POST['PromotionalCheck1'];
-    $Issue_ReferredByLEADID = $_POST['Issue_ReferredByLEADID'];
-    $Issue_ReferredByMEMBERSHIPID = $_POST['Issue_ReferredByMEMBERSHIPID'];
+    $itemCheck1 = $_POST['itemCheck1'] ?? "";
+    $BookletCheck1 = $_POST['BookletCheck1'] ?? "";
+    $CertificatesCheck1 = $_POST['CertificatesCheck1'] ?? "";
+    $PromotionalCheck1 = $_POST['PromotionalCheck1'] ?? "";
+    $Issue_ReferredByLEADID = $_POST['Issue_ReferredByLEADID'] ?? "";
+    $Issue_ReferredByMEMBERSHIPID = $_POST['Issue_ReferredByMEMBERSHIPID'] ?? "";
 
 
 
