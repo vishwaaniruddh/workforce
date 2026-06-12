@@ -13,7 +13,7 @@
                     <div class="mx-auto col-md-8">
                
                 <div class="p-b-20 text-center">
-                            <p> <img src="newassets/logo.png" width="120px"  alt="User" />
+                            <p> <img src="assets/headlogo.webp" width="120px" alt="User" />
                                
                          
                             </p>

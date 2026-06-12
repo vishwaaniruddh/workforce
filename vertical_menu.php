@@ -268,7 +268,7 @@ if($my_Array==66){ ?>
     <div class="admin-sidebar-brand">
         <!-- begin sidebar branding-->
         
-        <span class="admin-brand-content font-secondary"><a href="dashboard_redirect.php"><img class="admin-brand-logo" src="newassets/wlogo.png"  alt="atmos Logo"></a></span>
+        <span class="admin-brand-content font-secondary"><a href="dashboard_redirect.php"><img class="admin-brand-logo" src="assets/headlogo.webp" alt="CRM Logo"></a></span>
         <!-- end sidebar branding-->
         <div class="ml-auto">
             <!-- sidebar pin-->
