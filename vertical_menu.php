@@ -11,7 +11,7 @@ foreach($myArray as $my_Array){
     ?>
    <!--  <script>alert(<?php echo $my_Array;?>)</script>-->
     
-    <?
+    <?php
     if($my_Array==1){?>
     <script>$(function(){$("#1").show();$("#hdm2").show();});</script><?php } 
     
