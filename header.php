@@ -72,3 +72,9 @@ $(function(){
     });
     
 </script>
+
+<style>
+    th, td {
+        white-space: nowrap;
+    }
+</style>
