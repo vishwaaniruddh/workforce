@@ -62,11 +62,11 @@ function isNumber(evt) {
 $(function(){
       $('input[type=text]').keyup(function(){
         var input_val = $(this).val();
-        var inputRGEX = /^[a-zA-Z0-9!@#$%^&*(){};:<>,.-?/]*$/;
+        var inputRGEX = /^[a-zA-Z0-9!@#$%^&*(){};:<>,.?\-\/]*$/;
         var inputResult = inputRGEX.test(input_val);
           if(!(inputResult))
           {     
-            this.value = this.value.replace(/[^a-zA-Z0-9!@#$%^&*(){};:<>,.?-/\s]/gi, '');
+            this.value = this.value.replace(/[^a-zA-Z0-9!@#$%^&*(){};:<>,.?\-\/\s]/gi, '');
           }
        });
     });
