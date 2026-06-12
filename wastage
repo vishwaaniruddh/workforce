@@ -1,0 +1,19 @@
+<?php include('config.php');
+
+
+
+$a = '12000186';
+
+
+for($i=1;$i<10;$i++){
+    $b = '00'.$i;
+    $sql = "insert into BarcodeScan(Voucher_id) values('".$a.$b."')";
+    // mysqli_query($conn,$sql);
+    echo $sql;
+    echo '<br>';
+}
+
+
+
+
+?>
